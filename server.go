@@ -23,6 +23,12 @@ type Dog struct {
 	isGoodBoi bool `json:"isGoodBoi"`
 }
 
+type Cat struct {
+	Name string `json:"name"`
+
+	isGoodKitty bool `json:"isGoodKitty"`
+}
+
 func greeting(context echo.Context) error {
 	// Context holds relevant information about the request such as data response body ...
 	return context.String(http.StatusOK, "Thanks for visiting the server!")
@@ -63,9 +69,23 @@ func dogs(context echo.Context) error {
 
 	// Now that we have our dog object instantiated
 	// We have to intercept the request body and we have to unmarshal it into our dog object
-	json := json.NewDecoder(context.Request().Body).Decode(&dog) // Unmarshal data and write it to our dog object in memory
+	err := json.NewDecoder(context.Request().Body).Decode(&dog) // Unmarshal data and write it to our dog object in memory
+	// Why does this function return an errror ... design decision?
 
-	fmt.Printf("JSON from decoded data %s and our dog object %s", json, dog)
+	fmt.Printf("JSON from decoded data %s and our dog object %s", err, dog)
+	return context.String(http.StatusOK, "Accepted Request")
+}
+
+func cats(context echo.Context) error {
+	// This is another way of quite literally binding the json to our instantiated object
+	cat := Cat{}
+
+	err := context.Bind(&cat) // Unmarshal data and bind it immediately by writing it to our cat object
+	if err != nil {
+		fmt.Printf("Error when binding data to our cat object %s", err)
+	}
+
+	fmt.Printf("This is the cat object %s", cat)
 	return context.String(http.StatusOK, "Accepted Request")
 }
 
@@ -78,6 +98,7 @@ func main() {
 	client.GET("/greeting", greeting) // The framework provides us the context?
 	client.POST("/lifeInfo", lifeInfo)
 	client.POST("/dogs", dogs)
+	client.POST("/cats", cats)
 	client.GET("/goodbye", goodbye)
 
 	client.Start(":4000")
