@@ -97,6 +97,8 @@ func main() {
 
 	client.GET("/greeting", greeting) // The framework provides us the context?
 	client.POST("/lifeInfo", lifeInfo)
+
+	// Y
 	client.POST("/dogs", dogs)
 	client.POST("/cats", cats)
 	client.GET("/goodbye", goodbye)
