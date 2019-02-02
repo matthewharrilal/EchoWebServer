@@ -50,6 +50,8 @@ func lifeInfo(context echo.Context) error {
 	return context.String(http.StatusOK, "Accepted Request")
 }
 
+
+
 func main() {
 	fmt.Println("Server is running on port 4000!")
 
