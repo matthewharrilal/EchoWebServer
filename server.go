@@ -15,6 +15,14 @@ type LifeInfo struct {
 	Name string `json:"name"`
 }
 
+type Dog struct {
+	Name string `json:"name"`
+
+	Age int `json:"age"`
+
+	isGoodBoi bool `json:"isGoodBoi"`
+}
+
 func greeting(context echo.Context) error {
 	// Context holds relevant information about the request such as data response body ...
 	return context.String(http.StatusOK, "Thanks for visiting the server!")
@@ -50,7 +58,16 @@ func lifeInfo(context echo.Context) error {
 	return context.String(http.StatusOK, "Accepted Request")
 }
 
+func dogs(context echo.Context) error {
+	dog := Dog{}
 
+	// Now that we have our dog object instantiated
+	// We have to intercept the request body and we have to unmarshal it into our dog object
+	json := json.NewDecoder(context.Request().Body).Decode(&dog) // Unmarshal data and write it to our dog object in memory
+
+	fmt.Printf("JSON from decoded data %s and our dog object %s", json, dog)
+	return context.String(http.StatusOK, "Accepted Request")
+}
 
 func main() {
 	fmt.Println("Server is running on port 4000!")
@@ -60,6 +77,7 @@ func main() {
 
 	client.GET("/greeting", greeting) // The framework provides us the context?
 	client.POST("/lifeInfo", lifeInfo)
+	client.POST("/dogs", dogs)
 	client.GET("/goodbye", goodbye)
 
 	client.Start(":4000")
