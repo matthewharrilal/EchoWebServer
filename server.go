@@ -1,11 +1,19 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/labstack/echo"
 )
+
+type LifeInfo struct {
+	Happy string `json:"happy"`
+
+	Name string `json:"name"`
+}
 
 func greeting(context echo.Context) error {
 	// Context holds relevant information about the request such as data response body ...
@@ -30,6 +38,19 @@ func goodbye(context echo.Context) error {
 	})
 }
 
+func lifeInfo(context echo.Context) error {
+	lifeInfo := LifeInfo{} // So you can pass this object by reference as opposed to value
+
+	defer context.Request().Body.Close()
+	err := json.NewDecoder(context.Request().Body).Decode(&lifeInfo) // The body of data that the user is trying to send through the request
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Here is the life info object %s", lifeInfo)
+	return context.String(http.StatusOK, "Accepted request")
+}
+
 func main() {
 	fmt.Println("Server is running on port 4000!")
 
@@ -37,6 +58,7 @@ func main() {
 	client := echo.New() // Creating an instance of our server
 
 	client.GET("/greeting", greeting) // The framework provides us the context?
+	client.POST("/lifeInfo", lifeInfo)
 	client.GET("/goodbye", goodbye)
 
 	client.Start(":4000")
