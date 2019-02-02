@@ -20,4 +20,6 @@ func main() {
 
 	client.GET("/greeting", greeting) // The framework provides us the context?
 
+	client.Start(":4000")
+
 }
