@@ -14,11 +14,20 @@ func greeting(context echo.Context) error {
 
 func goodbye(context echo.Context) error {
 	nameParam := context.QueryParam("name")
+
+	// From my understanding the difference between params and query params is that query params usually have more information about the type of path that the user wants to be directed to
+	// /goodbye/:name and to extract it context.Param["name"]
+
+	// That is one way of extracting the parameters you can also add it in the route by denoting the : symbol along with the name of the resource
+
 	// jsonObject := map[string]string{
 	// 	"name": nameParam,
 	// }
 	// name := context.JSON(http.StatusOK, jsonObject)
-	return context.String(http.StatusOK, fmt.Sprintf("Are you sure you want to leave %s?", nameParam))
+	// return context.String(http.StatusOK, fmt.Sprintf("Are you sure you want to leave %s?", nameParam))
+	return context.JSON(http.StatusOK, map[string]string{
+		"message": nameParam,
+	})
 }
 
 func main() {
