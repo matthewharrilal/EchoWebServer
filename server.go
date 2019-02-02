@@ -5,14 +5,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 type LifeInfo struct {
 	Happy string `json:"happy"`
 
 	Name string `json:"name"`
+	
 }
 
 type Dog struct {
@@ -25,8 +26,6 @@ type Dog struct {
 
 type Cat struct {
 	Name string `json:"name"`
-
-	isGoodKitty bool `json:"isGoodKitty"`
 }
 
 func greeting(context echo.Context) error {
@@ -54,7 +53,7 @@ func goodbye(context echo.Context) error {
 
 func lifeInfo(context echo.Context) error {
 	lifeInfo := LifeInfo{} // So you can pass this object by reference as opposed to value
-
+	
 	err := json.NewDecoder(context.Request().Body).Decode(&lifeInfo) // The body of data that the user is trying to send through the request
 	if err != nil {
 		log.Fatal(err)
@@ -94,11 +93,13 @@ func main() {
 
 	// Instantiate the client that is going to be trigerring the requests
 	client := echo.New() // Creating an instance of our server
-
+	client.Use(middleware.Logger())
 	client.GET("/greeting", greeting) // The framework provides us the context?
 	client.POST("/lifeInfo", lifeInfo)
 
-	// Y
+	// You can attach middlewares to a route
+	
+
 	client.POST("/dogs", dogs)
 	client.POST("/cats", cats)
 	client.GET("/goodbye", goodbye)
