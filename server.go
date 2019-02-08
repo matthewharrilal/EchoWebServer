@@ -45,13 +45,13 @@ type Language struct {
 	URL  string `json:"url"`
 }
 
-func ConfigureDatabase() {
+func ConfigureDatabase() { // Responsible for configuring the database and migrating the schema
 	db, err := gorm.Open("sqlite3", "test.db")
 	if err != nil {
 		panic(err)
 	}
 
-	defer db.Close() // Close database connection after surrounding function executes
+	// defer db.Close() // Close database connection after surrounding function executes ... when should we actually close the connection
 }
 
 func ObtainRegion(channel chan Region) Region {
@@ -106,6 +106,9 @@ func main() {
 	go ObtainRegion(channel)
 
 	region := <-channel
+
+	// Now that we have the region we have to be able to obtain the region and save it to the database
+
 
 	fmt.Printf("This is the region ", region)
 
