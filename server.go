@@ -119,7 +119,8 @@ func main() {
 
 	// Now that we have the region we have to be able to obtain the region and save it to the database
 
-	fmt.Printf("This is the region ", region)
+	// fmt.Printf("FETCHED REGION ", region)
+	fmt.Println((ConfigureDatabase(&region)))
 
 	// Now that you have the region
 	client.Start(":4000")
