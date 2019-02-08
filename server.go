@@ -54,7 +54,7 @@ func ConfigureDatabase() {
 	defer db.Close() // Close database connection after surrounding function executes
 }
 
-func ObtainRegion(channel chan int) Region {
+func ObtainRegion(channel chan Region) Region {
 	// Pass the region that is being returned through the channel that the main go routine is going to receive
 
 	url := "http://pokeapi.co/api/v2/pokedex/kanto/"
@@ -92,7 +92,7 @@ func ObtainRegion(channel chan int) Region {
 		fmt.Println(err)
 		log.Fatal(err)
 	}
-	fmt.Printf("REGION >>> ", region)
+	channel <- region // Pass region through the channel
 	return region
 }
 
@@ -102,7 +102,12 @@ func main() {
 	// Instantiate the client that is going to be trigerring the requests
 	client := echo.New() // Creating an instance of our server
 	// client.GET("/region", ObtainRegion())
-	go ObtainRegion()
+	channel := make(chan Region)
+	go ObtainRegion(channel)
+
+	region := <-channel
+
+	fmt.Printf("This is the region ", region)
 
 	// Now that you have the region
 	client.Start(":4000")
