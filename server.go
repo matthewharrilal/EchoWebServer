@@ -13,7 +13,7 @@ import (
 )
 
 type Region struct {
-	gorm.Model
+	gorm.Model // Attaches object attributes such as an ID, created_at, deleted_at, and updated_at attributes
 
 	Descriptions []Description `json:"descriptions"` // Slice of description objects
 
@@ -65,6 +65,7 @@ func ConfigureDatabase(region *Region) Region { // Responsible for configuring t
 
 	fmt.Println(fetchedRegion)
 
+	// Adding debugger because it acts a logger and print results of each operation
 	db.Debug().Delete(&fetchedRegion)
 
 	return fetchedRegion
