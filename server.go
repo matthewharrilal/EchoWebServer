@@ -45,14 +45,22 @@ type Language struct {
 	URL  string `json:"url"`
 }
 
-func ConfigureDatabase() { // Responsible for configuring the database and migrating the schema
-
+func ConfigureDatabase(region *Region) Region { // Responsible for configuring the database and migrating the schema
+	db, err := gorm.Open("sqlite3", "test.db")
 	if err != nil {
 		panic(err)
 	}
 
 	db.AutoMigrate(&Region{}) // Migrate the region schema to the database
 	// defer db.Close() // Close database connection after surrounding function executes ... when should we actually close the connection
+
+	db.Create(&region) // Create region object passed by reference
+
+	var fetchedRegion Region
+	// To test that we saved the region object lets see after saving if we can fetch that region object
+	db.First(&fetchedRegion, 1) // Find the first region object and read the results directly to this fetched region object
+
+	return fetchedRegion
 
 }
 
