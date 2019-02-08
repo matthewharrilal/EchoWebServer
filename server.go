@@ -63,6 +63,8 @@ func ConfigureDatabase(region *Region) Region { // Responsible for configuring t
 
 	db.Debug().Model(&fetchedRegion).Update("isMainSeries", true)
 
+	fmt.Println(fetchedRegion)
+
 	db.Debug().Delete(&fetchedRegion)
 
 	return fetchedRegion
