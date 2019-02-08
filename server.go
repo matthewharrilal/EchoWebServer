@@ -61,6 +61,10 @@ func ConfigureDatabase(region *Region) Region { // Responsible for configuring t
 	// To test that we saved the region object lets see after saving if we can fetch that region object
 	db.Debug().First(&fetchedRegion, 1) // Find the first region object and read the results directly to this fetched region object
 
+	db.Debug().Model(&fetchedRegion).Update("isMainSeries", true)
+
+	db.Debug().Delete(&fetchedRegion)
+
 	return fetchedRegion
 
 }
