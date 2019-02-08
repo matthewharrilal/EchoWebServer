@@ -51,14 +51,15 @@ func ConfigureDatabase(region *Region) Region { // Responsible for configuring t
 		panic(err)
 	}
 
-	db.AutoMigrate(&Region{}) // Migrate the region schema to the database
+	db.Debug().AutoMigrate(&Region{}) // Migrate the region schema to the database
 	// defer db.Close() // Close database connection after surrounding function executes ... when should we actually close the connection
 
-	db.Create(&region) // Create region object passed by reference
+	db.Debug().Create(&region) // Create region object passed by reference
 
+	fmt.Println(db)
 	var fetchedRegion Region
 	// To test that we saved the region object lets see after saving if we can fetch that region object
-	db.First(&fetchedRegion, 1) // Find the first region object and read the results directly to this fetched region object
+	db.Debug().First(&fetchedRegion, 1) // Find the first region object and read the results directly to this fetched region object
 
 	return fetchedRegion
 
